@@ -1,9 +1,13 @@
 import { Link } from "expo-router";
 import { Text, View, Pressable } from "react-native";
+import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
+import { styled } from "nativewind";
+
+const SafeAreaView = styled(RNSafeAreaView);
 
 export default function Index() {
   return (
-    <View className="flex-1 justify-center bg-background p-6">
+    <SafeAreaView className="flex-1 bg-background p-5">
       {/* Test Card using global.css classes: home-balance-card, home-balance-label, home-balance-amount */}
       <View className="home-balance-card">
         <Text className="home-balance-label">NativeWind v5 Setup</Text>
@@ -18,6 +22,6 @@ export default function Index() {
           <Text className="auth-button-text text-white text-center">Go to Onboarding</Text>
         </Pressable>
       </Link>
-    </View>
+    </SafeAreaView>
   );
 }
