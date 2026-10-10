@@ -34,6 +34,20 @@ export const spacing = {
     30: 120,
 } as const;
 
+export const touchTargets = {
+    minTouchTarget: 48,
+    ctaHeight: 56,
+    pillMinHeight: 42,
+} as const;
+
+export const radii = {
+    none: 0,
+    sm: 6,
+    md: 10,
+    lg: 16,
+    full: 9999,
+} as const;
+
 export const components = {
     tabBar: {
         height: spacing[18],
@@ -42,10 +56,17 @@ export const components = {
         iconFrame: spacing[12],
         itemPaddingVertical: spacing[2],
     },
+    stopCard: {
+        borderRadius: radii.lg,
+        padding: spacing[4],
+        minCtaHeight: touchTargets.ctaHeight,
+    },
 } as const;
 
 export const theme = {
     colors,
     spacing,
+    touchTargets,
+    radii,
     components,
 } as const;
