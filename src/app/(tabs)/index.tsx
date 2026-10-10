@@ -80,7 +80,6 @@ export default function HomeScreen() {
         }}
       >
         <HomeHeader
-          userName={HOME_USER.name}
           onAddPress={() => setIsAddModalVisible(true)}
         />
 

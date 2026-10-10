@@ -1,5 +1,13 @@
 import React from "react";
-import { Image, ImageSourcePropType, Pressable, Text, View } from "react-native";
+import {
+  Image,
+  ImageSourcePropType,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
+import { router } from "expo-router";
+import { useUser } from "@clerk/expo";
 import { HOME_USER } from "@/constants/data";
 import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
@@ -8,25 +16,62 @@ export interface HomeHeaderProps {
   userName?: string;
   userAvatar?: ImageSourcePropType;
   onAddPress?: () => void;
+  onProfilePress?: () => void;
 }
 
 export const HomeHeader: React.FC<HomeHeaderProps> = ({
-  userName = HOME_USER.name,
-  userAvatar = images.avatar,
+  userName,
+  userAvatar,
   onAddPress,
+  onProfilePress,
 }) => {
+  const { user } = useUser();
+
+  const getDisplayName = (): string => {
+    if (userName) return userName;
+    if (user?.fullName) return user.fullName;
+    if (user?.firstName) {
+      return `${user.firstName}${user.lastName ? ` ${user.lastName}` : ""}`;
+    }
+    if (user?.username) return user.username;
+    if (user?.primaryEmailAddress?.emailAddress) {
+      const emailPrefix = user.primaryEmailAddress.emailAddress.split("@")[0];
+      return emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
+    }
+    return HOME_USER.name;
+  };
+
+  const getAvatarSource = (): ImageSourcePropType => {
+    if (userAvatar) return userAvatar;
+    if (user?.imageUrl) return { uri: user.imageUrl };
+    return images.avatar;
+  };
+
+  const handleProfilePress = () => {
+    if (onProfilePress) {
+      onProfilePress();
+    } else {
+      router.push("/(tabs)/setting");
+    }
+  };
+
   return (
     <View className="home-header">
-      <View className="home-user">
+      <Pressable
+        onPress={handleProfilePress}
+        accessibilityRole="button"
+        accessibilityLabel="View profile"
+        className="home-user active:opacity-75"
+      >
         <Image
-          source={userAvatar}
+          source={getAvatarSource()}
           className="home-avatar"
           resizeMode="cover"
         />
         <Text className="home-user-name" numberOfLines={1}>
-          {userName}
+          {getDisplayName()}
         </Text>
-      </View>
+      </Pressable>
 
       <Pressable
         onPress={onAddPress}
