@@ -68,9 +68,21 @@ export const HomeHeader: React.FC<HomeHeaderProps> = ({
           className="home-avatar"
           resizeMode="cover"
         />
-        <Text className="home-user-name" numberOfLines={1}>
-          {getDisplayName()}
-        </Text>
+        <View className="ml-3.5 justify-center">
+          <View className="flex-row items-center gap-1.5 mb-0.5">
+            <Image
+              source={icons.logo}
+              className="size-3.5"
+              resizeMode="contain"
+            />
+            <Text className="text-[11px] font-sans-bold uppercase tracking-wider text-muted-foreground">
+              Looply
+            </Text>
+          </View>
+          <Text className="text-xl font-sans-bold text-primary" numberOfLines={1}>
+            {getDisplayName()}
+          </Text>
+        </View>
       </Pressable>
 
       <Pressable

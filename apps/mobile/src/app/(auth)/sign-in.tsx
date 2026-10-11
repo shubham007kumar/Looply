@@ -15,6 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Link, Redirect, router } from "expo-router";
 import { useAuth, useSignIn } from "@clerk/expo";
 import { icons } from "@/constants/icons";
+import { BrandLogo } from "@/components";
 
 export default function SignInScreen() {
   const insets = useSafeAreaInsets();
@@ -90,21 +91,7 @@ export default function SignInScreen() {
         >
           <View>
             {/* Top Brand Block */}
-            <View className="mt-4 flex-row items-center justify-center gap-3">
-              <Image
-                source={icons.logo}
-                className="size-14 rounded-2xl"
-                resizeMode="contain"
-              />
-              <View className="justify-center">
-                <Text className="text-2xl font-sans-bold text-primary tracking-tight">
-                  Recurly
-                </Text>
-                <Text className="text-[11px] font-sans-semibold uppercase tracking-[1.5px] text-muted-foreground -mt-0.5">
-                  SMART BILLING
-                </Text>
-              </View>
-            </View>
+            <BrandLogo variant="lockup" size="lg" className="mt-4" />
 
             {/* Title & Subtitle */}
             <View className="mt-10 items-center">
@@ -199,7 +186,7 @@ export default function SignInScreen() {
           {/* Footer Link */}
           <View className="mt-8 flex-row items-center justify-center gap-1.5 pb-2">
             <Text className="text-sm font-sans-medium text-muted-foreground">
-              New to Recurly?
+              New to Looply?
             </Text>
             <Link href="/(auth)/sign-up" asChild>
               <Pressable hitSlop={8}>

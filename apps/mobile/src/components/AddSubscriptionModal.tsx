@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Image,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -76,7 +77,15 @@ export const AddSubscriptionModal: React.FC<AddSubscriptionModalProps> = ({
         <Pressable className="flex-1" onPress={onClose} />
         <View className="modal-container">
           <View className="modal-header">
-            <Text className="modal-title">New Subscription</Text>
+            <View className="flex-row items-center gap-2.5">
+              <Image
+                source={icons.logo}
+                className="size-6"
+                resizeMode="contain"
+                accessibilityLabel="Looply"
+              />
+              <Text className="modal-title">New Subscription</Text>
+            </View>
             <Pressable
               onPress={onClose}
               className="modal-close"

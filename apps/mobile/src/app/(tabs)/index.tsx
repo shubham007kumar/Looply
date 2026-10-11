@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   Alert,
+  RefreshControl,
   ScrollView,
   StatusBar,
   Text,
@@ -15,18 +16,21 @@ import ListHeading from "@/components/ListHeading";
 import UpcomingSubscriptionCard from "@/components/UpcomingSubscriptionCard";
 import SubscriptionCard from "@/components/SubscriptionCard";
 import AddSubscriptionModal from "@/components/AddSubscriptionModal";
-
-import {
-  HOME_BALANCE,
-  HOME_SUBSCRIPTIONS,
-  HOME_USER,
-  UPCOMING_SUBSCRIPTIONS,
-} from "@/constants/data";
+import { useSubscriptions } from "@/hooks/useSubscriptions";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
-  const [subscriptions, setSubscriptions] =
-    useState<Subscription[]>(HOME_SUBSCRIPTIONS);
+  const {
+    subscriptions,
+    totalBalance,
+    upcomingSubscriptions,
+    nextRenewalDate,
+    addSubscription,
+    cancelSubscription,
+    refresh,
+    isRefreshing,
+  } = useSubscriptions();
+
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [cancellingId, setCancellingId] = useState<string | null>(null);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
@@ -47,14 +51,10 @@ export default function HomeScreen() {
           onPress: () => {
             setCancellingId(id);
             setTimeout(() => {
-              setSubscriptions((prev) =>
-                prev.map((sub) =>
-                  sub.id === id ? { ...sub, status: "cancelled" } : sub
-                )
-              );
+              cancelSubscription(id);
               setCancellingId(null);
               setExpandedId(null);
-            }, 800);
+            }, 600);
           },
         },
       ]
@@ -62,7 +62,7 @@ export default function HomeScreen() {
   };
 
   const handleAddSubscription = (newSub: Subscription) => {
-    setSubscriptions((prev) => [newSub, ...prev]);
+    addSubscription(newSub);
   };
 
   return (
@@ -74,18 +74,19 @@ export default function HomeScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={refresh} />
+        }
         contentContainerStyle={{
           paddingHorizontal: 20,
           paddingBottom: Math.max(insets.bottom, 24) + 96,
         }}
       >
-        <HomeHeader
-          onAddPress={() => setIsAddModalVisible(true)}
-        />
+        <HomeHeader onAddPress={() => setIsAddModalVisible(true)} />
 
         <BalanceCard
-          amount={HOME_BALANCE.amount}
-          renewalDate={HOME_BALANCE.nextRenewalDate}
+          amount={totalBalance}
+          renewalDate={nextRenewalDate}
         />
 
         <ListHeading
@@ -99,7 +100,7 @@ export default function HomeScreen() {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingRight: 4 }}
         >
-          {UPCOMING_SUBSCRIPTIONS.map((item) => (
+          {upcomingSubscriptions.map((item) => (
             <UpcomingSubscriptionCard
               key={item.id}
               icon={item.icon}

@@ -3,6 +3,7 @@ import {
   ActionSheetIOS,
   Alert,
   Platform,
+  RefreshControl,
   ScrollView,
   StatusBar,
   Text,
@@ -13,13 +14,20 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ScreenHeader from "@/components/ScreenHeader";
 import SubscriptionCard from "@/components/SubscriptionCard";
 import AddSubscriptionModal from "@/components/AddSubscriptionModal";
-import { MY_SUBSCRIPTIONS } from "@/constants/data";
+import { useSubscriptions } from "@/hooks/useSubscriptions";
 
 export default function SubscriptionScreen() {
   const insets = useSafeAreaInsets();
-  const [subscriptions, setSubscriptions] =
-    useState<Subscription[]>(MY_SUBSCRIPTIONS);
-  const [expandedId, setExpandedId] = useState<string | null>("github-copilot");
+  const {
+    subscriptions,
+    setSubscriptions,
+    addSubscription,
+    cancelSubscription,
+    refresh,
+    isRefreshing,
+  } = useSubscriptions();
+
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [cancellingId, setCancellingId] = useState<string | null>(null);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
 
@@ -39,11 +47,7 @@ export default function SubscriptionScreen() {
           onPress: () => {
             setCancellingId(id);
             setTimeout(() => {
-              setSubscriptions((prev) =>
-                prev.map((sub) =>
-                  sub.id === id ? { ...sub, status: "cancelled" } : sub
-                )
-              );
+              cancelSubscription(id);
               setCancellingId(null);
               setExpandedId(null);
             }, 600);
@@ -94,7 +98,7 @@ export default function SubscriptionScreen() {
             "Add New Subscription",
             "Sort by Price (High to Low)",
             "Sort by Price (Low to High)",
-            "Reset Default Subscriptions",
+            "Refresh Subscriptions",
           ],
           cancelButtonIndex: 0,
         },
@@ -110,8 +114,7 @@ export default function SubscriptionScreen() {
               [...prev].sort((a, b) => a.price - b.price)
             );
           } else if (buttonIndex === 4) {
-            setSubscriptions(MY_SUBSCRIPTIONS);
-            setExpandedId("github-copilot");
+            refresh();
           }
         }
       );
@@ -129,11 +132,8 @@ export default function SubscriptionScreen() {
               ),
           },
           {
-            text: "Reset Defaults",
-            onPress: () => {
-              setSubscriptions(MY_SUBSCRIPTIONS);
-              setExpandedId("github-copilot");
-            },
+            text: "Refresh Subscriptions",
+            onPress: () => refresh(),
           },
           { text: "Cancel", style: "cancel" },
         ]
@@ -142,7 +142,7 @@ export default function SubscriptionScreen() {
   };
 
   const handleAddSubscription = (newSub: Subscription) => {
-    setSubscriptions((prev) => [newSub, ...prev]);
+    addSubscription(newSub);
   };
 
   return (
@@ -154,6 +154,9 @@ export default function SubscriptionScreen() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={refresh} />
+        }
         contentContainerStyle={{
           paddingHorizontal: 20,
           paddingBottom: Math.max(insets.bottom, 24) + 96,

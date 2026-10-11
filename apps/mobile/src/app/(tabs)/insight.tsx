@@ -15,6 +15,7 @@ import ListHeading from "@/components/ListHeading";
 import InsightsBarChart from "@/components/InsightsBarChart";
 import ExpensesSummaryCard from "@/components/ExpensesSummaryCard";
 import SubscriptionCard from "@/components/SubscriptionCard";
+import { useSubscriptions } from "@/hooks/useSubscriptions";
 
 import {
   INSIGHTS_HISTORY_SUBSCRIPTIONS,
@@ -24,11 +25,14 @@ import {
 
 export default function InsightScreen() {
   const insets = useSafeAreaInsets();
-  const [historySubscriptions, setHistorySubscriptions] = useState<
-    Subscription[]
-  >(INSIGHTS_HISTORY_SUBSCRIPTIONS);
+  const { subscriptions, totalBalance, cancelSubscription } = useSubscriptions();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [cancellingId, setCancellingId] = useState<string | null>(null);
+
+  const displaySubscriptions =
+    subscriptions.length > 0 ? subscriptions : INSIGHTS_HISTORY_SUBSCRIPTIONS;
+  const displayAmount =
+    subscriptions.length > 0 ? -totalBalance : MONTHLY_EXPENSES_SUMMARY.amount;
 
   const handleToggleExpand = (id: string) => {
     setExpandedId((prev) => (prev === id ? null : id));
@@ -46,11 +50,7 @@ export default function InsightScreen() {
           onPress: () => {
             setCancellingId(id);
             setTimeout(() => {
-              setHistorySubscriptions((prev) =>
-                prev.map((sub) =>
-                  sub.id === id ? { ...sub, status: "cancelled" } : sub
-                )
-              );
+              cancelSubscription(id);
               setCancellingId(null);
               setExpandedId(null);
             }, 600);
@@ -170,7 +170,7 @@ export default function InsightScreen() {
         <ExpensesSummaryCard
           title={MONTHLY_EXPENSES_SUMMARY.title}
           period={MONTHLY_EXPENSES_SUMMARY.period}
-          amount={MONTHLY_EXPENSES_SUMMARY.amount}
+          amount={displayAmount}
           percentageChange={MONTHLY_EXPENSES_SUMMARY.percentageChange}
         />
 
@@ -181,7 +181,7 @@ export default function InsightScreen() {
           onActionPress={() => router.push("/(tabs)/subscription")}
         />
 
-        {historySubscriptions.map((sub) => (
+        {displaySubscriptions.map((sub) => (
           <SubscriptionCard
             key={sub.id}
             icon={sub.icon}

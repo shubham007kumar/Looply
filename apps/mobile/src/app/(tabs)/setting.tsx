@@ -1,6 +1,7 @@
 import React from "react";
 import {
   ActivityIndicator,
+  Image,
   Pressable,
   ScrollView,
   StatusBar,
@@ -10,6 +11,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAuth } from "@clerk/expo";
 import { UserDetailsCard } from "@/components";
+import { icons } from "@/constants/icons";
 import { colors } from "@/constants/theme";
 
 export default function Setting() {
@@ -53,15 +55,27 @@ export default function Setting() {
 
         {/* App Info Card */}
         <View className="rounded-3xl border border-border bg-card p-5 mb-6 gap-4">
-          <Text className="text-base font-sans-bold text-primary">
-            Application
-          </Text>
+          <View className="flex-row items-center gap-3.5 pb-4 border-b border-border">
+            <Image
+              source={icons.logo}
+              className="size-12"
+              resizeMode="contain"
+            />
+            <View>
+              <Text className="text-lg font-sans-bold text-primary">
+                Looply
+              </Text>
+              <Text className="text-xs font-sans-medium text-muted-foreground">
+                Smart Subscription Manager
+              </Text>
+            </View>
+          </View>
           <View className="flex-row items-center justify-between py-2 border-b border-border">
             <Text className="text-sm font-sans-medium text-muted-foreground">
               App Name
             </Text>
             <Text className="text-sm font-sans-semibold text-primary">
-              Recurly Smart Billing
+              Looply
             </Text>
           </View>
           <View className="flex-row items-center justify-between py-2 border-b border-border">

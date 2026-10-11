@@ -15,6 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Link, Redirect, router } from "expo-router";
 import { useAuth, useSignUp } from "@clerk/expo";
 import { icons } from "@/constants/icons";
+import { BrandLogo } from "@/components";
 
 export default function SignUpScreen() {
   const insets = useSafeAreaInsets();
@@ -144,21 +145,7 @@ export default function SignUpScreen() {
         >
           <View>
             {/* Top Brand Block */}
-            <View className="mt-4 flex-row items-center justify-center gap-3">
-              <Image
-                source={icons.logo}
-                className="size-14 rounded-2xl"
-                resizeMode="contain"
-              />
-              <View className="justify-center">
-                <Text className="text-2xl font-sans-bold text-primary tracking-tight">
-                  Recurly
-                </Text>
-                <Text className="text-[11px] font-sans-semibold uppercase tracking-[1.5px] text-muted-foreground -mt-0.5">
-                  SMART BILLING
-                </Text>
-              </View>
-            </View>
+            <BrandLogo variant="lockup" size="lg" className="mt-4" />
 
             {/* Title & Subtitle */}
             <View className="mt-10 items-center">

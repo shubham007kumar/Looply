@@ -9,6 +9,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { images } from "@/constants/images";
+import { BrandLogo } from "@/components";
 
 export default function OnboardingScreen() {
   const insets = useSafeAreaInsets();
@@ -16,6 +17,14 @@ export default function OnboardingScreen() {
   return (
     <View className="flex-1 bg-accent">
       <StatusBar barStyle="light-content" />
+
+      {/* Top Floating Brand Badge */}
+      <View
+        className="absolute z-10 w-full items-center"
+        style={{ top: Math.max(insets.top, 16) + 8 }}
+      >
+        <BrandLogo variant="badge" theme="light" />
+      </View>
 
       {/* Background Graphic Pattern */}
       <View className="flex-1 justify-center items-center overflow-hidden">

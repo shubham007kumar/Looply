@@ -8,3 +8,4 @@ export { default as UserDetailsCard } from "./UserDetailsCard";
 export { default as ScreenHeader } from "./ScreenHeader";
 export { default as InsightsBarChart } from "./InsightsBarChart";
 export { default as ExpensesSummaryCard } from "./ExpensesSummaryCard";
+export { default as BrandLogo } from "./BrandLogo";

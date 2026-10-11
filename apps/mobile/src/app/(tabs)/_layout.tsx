@@ -4,6 +4,7 @@ import { ActivityIndicator, Image, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAuth } from "@clerk/expo";
 import { tabs } from "../../../constants/data";
+import { icons } from "../../../constants/icons";
 import { colors, components } from "../../../constants/theme";
 
 interface TabIconProps {
@@ -33,7 +34,13 @@ const TabLayout = () => {
         className="flex-1 items-center justify-center bg-background"
         style={{ paddingTop: inset.top }}
       >
-        <ActivityIndicator size="large" color={colors.accent} />
+        <Image
+          source={icons.logo}
+          className="size-16 mb-4"
+          resizeMode="contain"
+          accessibilityLabel="Looply"
+        />
+        <ActivityIndicator size="small" color={colors.accent} />
       </View>
     );
   }

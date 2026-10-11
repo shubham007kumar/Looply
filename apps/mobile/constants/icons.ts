@@ -46,3 +46,19 @@ export const icons = {
 } as const;
 
 export type IconKey = keyof typeof icons;
+
+/**
+ * Resolves an icon image from an iconKey or guesses based on subscription name
+ */
+export function getSubscriptionIcon(name?: string, iconKey?: string) {
+  if (iconKey && iconKey in icons) {
+    return icons[iconKey as IconKey];
+  }
+  const normalized = (name || "").toLowerCase();
+  for (const key of Object.keys(icons)) {
+    if (normalized.includes(key)) {
+      return icons[key as IconKey];
+    }
+  }
+  return icons.wallet;
+}
