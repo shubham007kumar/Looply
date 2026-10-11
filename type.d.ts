@@ -57,6 +57,18 @@ declare global {
         actionLabel?: string;
         onActionPress?: () => void;
     }
+
+    interface DailyExpense {
+        day: string;
+        amount: number;
+    }
+
+    interface ExpensesSummary {
+        title: string;
+        period: string;
+        amount: number;
+        percentageChange: string;
+    }
 }
 
 export {};

@@ -51,7 +51,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
           <View
             className={clsx(
               "size-14 items-center justify-center rounded-2xl",
-              expanded ? "bg-white" : "bg-muted/80"
+              expanded ? "bg-white" : color ? "bg-white/60" : "bg-muted/80"
             )}
           >
             <Image

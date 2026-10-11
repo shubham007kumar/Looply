@@ -18,6 +18,9 @@ import setting from "@/assets/icons/setting.png";
 import spotify from "@/assets/icons/spotify.png";
 import wallet from "@/assets/icons/wallet.png";
 
+import grammarly from "@/assets/icons/grammarly.png";
+import netflix from "@/assets/icons/netflix.png";
+
 export const icons = {
     home,
     logo,
@@ -38,6 +41,8 @@ export const icons = {
     github,
     claude,
     canva,
+    grammarly,
+    netflix,
 } as const;
 
 export type IconKey = keyof typeof icons;

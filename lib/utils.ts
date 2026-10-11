@@ -13,8 +13,11 @@ export const formatCurrency = (value: number, currency = "USD"): string => {
 
 export const formatSubscriptionDateTime = (value?: string): string => {
   if (!value) return "Not provided";
+  if (/^[A-Za-z]+\s+\d{1,2}(?:,\s*\d{1,2}:\d{2})?$/.test(value.trim())) {
+    return value;
+  }
   const parsedDate = new Date(value);
-  if (isNaN(parsedDate.getTime())) return "Not provided";
+  if (isNaN(parsedDate.getTime())) return value;
   const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
   const day = String(parsedDate.getDate()).padStart(2, "0");
   const year = parsedDate.getFullYear();

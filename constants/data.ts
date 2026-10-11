@@ -169,3 +169,56 @@ export const MY_SUBSCRIPTIONS: Subscription[] = [
         billing: "1 month",
     },
 ];
+
+export const WEEKLY_EXPENSES_DATA: DailyExpense[] = [
+    { day: "Mon", amount: 36 },
+    { day: "Tue", amount: 31 },
+    { day: "Wed", amount: 24 },
+    { day: "Thr", amount: 40 },
+    { day: "Fri", amount: 35 },
+    { day: "Sat", amount: 22 },
+    { day: "Sun", amount: 25 },
+];
+
+export const MONTHLY_EXPENSES_SUMMARY: ExpensesSummary = {
+    title: "Expenses",
+    period: "March 2026",
+    amount: -424.63,
+    percentageChange: "+12%",
+};
+
+export const INSIGHTS_HISTORY_SUBSCRIPTIONS: Subscription[] = [
+    {
+        id: "claude-history",
+        icon: icons.claude,
+        name: "Claude",
+        startDate: "June 25, 12:00",
+        price: 9.84,
+        currency: "USD",
+        billing: "per month",
+        status: "active",
+        color: "#ffd84d",
+    },
+    {
+        id: "canva-history",
+        icon: icons.canva,
+        name: "Canva",
+        startDate: "June 30, 16:00",
+        price: 43.89,
+        currency: "USD",
+        billing: "per month",
+        status: "active",
+        color: "#8fd1bd",
+    },
+    {
+        id: "grammarly-history",
+        icon: icons.grammarly,
+        name: "Grammarly",
+        startDate: "June 22, 10:30",
+        price: 15.0,
+        currency: "USD",
+        billing: "per month",
+        status: "active",
+        color: "#f6eecf",
+    },
+];

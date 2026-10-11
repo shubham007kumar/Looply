@@ -6,3 +6,5 @@ export { default as SubscriptionCard } from "./SubscriptionCard";
 export { default as AddSubscriptionModal } from "./AddSubscriptionModal";
 export { default as UserDetailsCard } from "./UserDetailsCard";
 export { default as ScreenHeader } from "./ScreenHeader";
+export { default as InsightsBarChart } from "./InsightsBarChart";
+export { default as ExpensesSummaryCard } from "./ExpensesSummaryCard";
