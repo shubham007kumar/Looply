@@ -1,13 +1,208 @@
-import { styled } from "nativewind";
-import { Text } from "react-native";
-import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
+import React, { useState } from "react";
+import {
+  ActionSheetIOS,
+  Alert,
+  Platform,
+  ScrollView,
+  StatusBar,
+  Text,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const SafeAreaView = styled(RNSafeAreaView);
+import ScreenHeader from "@/components/ScreenHeader";
+import SubscriptionCard from "@/components/SubscriptionCard";
+import AddSubscriptionModal from "@/components/AddSubscriptionModal";
+import { MY_SUBSCRIPTIONS } from "@/constants/data";
 
-export default function Subscription() {
+export default function SubscriptionScreen() {
+  const insets = useSafeAreaInsets();
+  const [subscriptions, setSubscriptions] =
+    useState<Subscription[]>(MY_SUBSCRIPTIONS);
+  const [expandedId, setExpandedId] = useState<string | null>("github-copilot");
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+
+  const handleToggleExpand = (id: string) => {
+    setExpandedId((prev) => (prev === id ? null : id));
+  };
+
+  const handleCancelPress = (id: string, name: string) => {
+    Alert.alert(
+      "Cancel Subscription",
+      `Are you sure you want to cancel your ${name} subscription?`,
+      [
+        { text: "Keep Subscription", style: "cancel" },
+        {
+          text: "Cancel Subscription",
+          style: "destructive",
+          onPress: () => {
+            setCancellingId(id);
+            setTimeout(() => {
+              setSubscriptions((prev) =>
+                prev.map((sub) =>
+                  sub.id === id ? { ...sub, status: "cancelled" } : sub
+                )
+              );
+              setCancellingId(null);
+              setExpandedId(null);
+            }, 600);
+          },
+        },
+      ]
+    );
+  };
+
+  const handleManagePayment = (sub: Subscription) => {
+    Alert.alert(
+      "Manage Payment",
+      `Payment method: ${sub.paymentMethod || "*****8530"}`,
+      [
+        { text: "Close", style: "cancel" },
+        {
+          text: "Update Card",
+          onPress: () => {
+            Alert.alert("Success", "Payment method updated.");
+          },
+        },
+      ]
+    );
+  };
+
+  const handleChangePlan = (sub: Subscription) => {
+    Alert.alert(
+      "Change Plan",
+      `Current plan: ${sub.planDetails || sub.plan || "Standard"}`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Upgrade Plan",
+          onPress: () => {
+            Alert.alert("Success", "Plan change requested.");
+          },
+        },
+      ]
+    );
+  };
+
+  const handleMenuPress = () => {
+    if (Platform.OS === "ios") {
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: [
+            "Cancel",
+            "Add New Subscription",
+            "Sort by Price (High to Low)",
+            "Sort by Price (Low to High)",
+            "Reset Default Subscriptions",
+          ],
+          cancelButtonIndex: 0,
+        },
+        (buttonIndex) => {
+          if (buttonIndex === 1) {
+            setIsAddModalVisible(true);
+          } else if (buttonIndex === 2) {
+            setSubscriptions((prev) =>
+              [...prev].sort((a, b) => b.price - a.price)
+            );
+          } else if (buttonIndex === 3) {
+            setSubscriptions((prev) =>
+              [...prev].sort((a, b) => a.price - b.price)
+            );
+          } else if (buttonIndex === 4) {
+            setSubscriptions(MY_SUBSCRIPTIONS);
+            setExpandedId("github-copilot");
+          }
+        }
+      );
+    } else {
+      Alert.alert(
+        "Subscription Options",
+        "Choose an action",
+        [
+          { text: "Add New Subscription", onPress: () => setIsAddModalVisible(true) },
+          {
+            text: "Sort by Price",
+            onPress: () =>
+              setSubscriptions((prev) =>
+                [...prev].sort((a, b) => b.price - a.price)
+              ),
+          },
+          {
+            text: "Reset Defaults",
+            onPress: () => {
+              setSubscriptions(MY_SUBSCRIPTIONS);
+              setExpandedId("github-copilot");
+            },
+          },
+          { text: "Cancel", style: "cancel" },
+        ]
+      );
+    }
+  };
+
+  const handleAddSubscription = (newSub: Subscription) => {
+    setSubscriptions((prev) => [newSub, ...prev]);
+  };
+
   return (
-    <SafeAreaView className="flex-1 justify-center items-center">
-      <Text>Subscription</Text>
-    </SafeAreaView>
+    <View
+      className="flex-1 bg-background"
+      style={{ paddingTop: Math.max(insets.top, 16) }}
+    >
+      <StatusBar barStyle="dark-content" />
+
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingHorizontal: 20,
+          paddingBottom: Math.max(insets.bottom, 24) + 96,
+        }}
+      >
+        <ScreenHeader
+          title="My Subscriptions"
+          onMenuPress={handleMenuPress}
+        />
+
+        {subscriptions.length === 0 ? (
+          <View className="items-center justify-center py-12">
+            <Text className="text-base font-sans-medium text-muted-foreground">
+              No subscriptions found
+            </Text>
+          </View>
+        ) : (
+          subscriptions.map((sub) => (
+            <SubscriptionCard
+              key={sub.id}
+              icon={sub.icon}
+              name={sub.name}
+              plan={sub.plan}
+              planDetails={sub.planDetails}
+              category={sub.category}
+              paymentMethod={sub.paymentMethod}
+              status={sub.status}
+              startDate={sub.startDate}
+              price={sub.price}
+              currency={sub.currency}
+              billing={sub.billing}
+              renewalDate={sub.renewalDate}
+              color={sub.color}
+              expanded={expandedId === sub.id}
+              onPress={() => handleToggleExpand(sub.id)}
+              onCancelPress={() => handleCancelPress(sub.id, sub.name)}
+              onManagePress={() => handleManagePayment(sub)}
+              onChangePlanPress={() => handleChangePlan(sub)}
+              isCancelling={cancellingId === sub.id}
+            />
+          ))
+        )}
+      </ScrollView>
+
+      <AddSubscriptionModal
+        visible={isAddModalVisible}
+        onClose={() => setIsAddModalVisible(false)}
+        onAddSubscription={handleAddSubscription}
+      />
+    </View>
   );
 }

@@ -5,3 +5,4 @@ export { default as UpcomingSubscriptionCard } from "./UpcomingSubscriptionCard"
 export { default as SubscriptionCard } from "./SubscriptionCard";
 export { default as AddSubscriptionModal } from "./AddSubscriptionModal";
 export { default as UserDetailsCard } from "./UserDetailsCard";
+export { default as ScreenHeader } from "./ScreenHeader";

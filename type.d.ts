@@ -17,6 +17,7 @@ declare global {
         icon: ImageSourcePropType;
         name: string;
         plan?: string;
+        planDetails?: string;
         category?: string;
         paymentMethod?: string;
         status?: string;
@@ -32,6 +33,8 @@ declare global {
         expanded: boolean;
         onPress: () => void;
         onCancelPress?: () => void;
+        onManagePress?: () => void;
+        onChangePlanPress?: () => void;
         isCancelling?: boolean;
     }
 

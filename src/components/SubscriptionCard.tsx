@@ -7,6 +7,7 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
   icon,
   name,
   plan,
+  planDetails,
   category,
   paymentMethod,
   status,
@@ -19,12 +20,16 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
   expanded,
   onPress,
   onCancelPress,
+  onManagePress,
+  onChangePlanPress,
   isCancelling = false,
 }) => {
   const billingLabel = billing
-    ? billing.toLowerCase().includes("month")
+    ? /^\d+\s*month/i.test(billing) || /^\d+\s*year/i.test(billing)
+      ? billing
+      : billing.toLowerCase() === "monthly"
       ? "per month"
-      : billing.toLowerCase().includes("year")
+      : billing.toLowerCase() === "yearly"
       ? "per year"
       : billing
     : "per month";
@@ -43,11 +48,18 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
         className="sub-head"
       >
         <View className="sub-main">
-          <Image
-            source={icon}
-            className="sub-icon"
-            resizeMode="contain"
-          />
+          <View
+            className={clsx(
+              "size-14 items-center justify-center rounded-2xl",
+              expanded ? "bg-white" : "bg-muted/80"
+            )}
+          >
+            <Image
+              source={icon}
+              className="size-8"
+              resizeMode="contain"
+            />
+          </View>
           <View className="sub-copy">
             <Text className="sub-title" numberOfLines={1}>
               {name}
@@ -76,25 +88,35 @@ export const SubscriptionCard: React.FC<SubscriptionCardProps> = ({
                   {paymentMethod || "*****8530"}
                 </Text>
               </View>
-              <View className="rounded-full border border-black/20 bg-background/50 px-3 py-1">
+              <Pressable
+                onPress={onManagePress}
+                accessibilityRole="button"
+                accessibilityLabel="Manage payment info"
+                className="rounded-full border border-black/20 bg-background/50 px-3 py-1 active:opacity-70"
+              >
                 <Text className="text-xs font-sans-semibold text-primary">
                   Manage
                 </Text>
-              </View>
+              </Pressable>
             </View>
 
             <View className="sub-row">
               <View className="sub-row-copy">
                 <Text className="sub-label">Plan details:</Text>
                 <Text className="sub-value" numberOfLines={1}>
-                  {plan || category || "Standard"}
+                  {planDetails || plan || category || "Standard"}
                 </Text>
               </View>
-              <View className="rounded-full border border-black/20 bg-background/50 px-3 py-1">
+              <Pressable
+                onPress={onChangePlanPress}
+                accessibilityRole="button"
+                accessibilityLabel="Change plan details"
+                className="rounded-full border border-black/20 bg-background/50 px-3 py-1 active:opacity-70"
+              >
                 <Text className="text-xs font-sans-semibold text-primary">
                   Change
                 </Text>
-              </View>
+              </Pressable>
             </View>
 
             {renewalDate && (
